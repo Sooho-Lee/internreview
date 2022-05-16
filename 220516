@@ -1,0 +1,107 @@
+#!/usr/bin/env python
+# coding: utf-8
+
+# In[ ]:
+
+
+- 데이터 프레임 열을 리스트로 추출하기
+- 누적 막대그래프 그리기
+- 파이썬 그래프 범례 밖으로 내보내기
+- 그래프에 x축, y축, 눈금 이름 달기
+- 파이썬 막대그래프의 값 표시
+- 상관분석
+- 회기분석
+- array를 list로 변경하기
+
+
+# In[45]:
+
+
+import pandas as pd
+import numpy as np
+import matplotlib as plt
+from matplotlib import pyplot as plt
+
+
+# In[46]:
+
+
+df = pd.DataFrame({'이름' : ['재원', '은영', '은지', '해영', '소희', '소희', '지철', '영이', '은지','소희', '영이','홍이','강원','송이'],
+                '채널명' : ['유튜브', '뉴스페이퍼', '팟캐스트',  '팟캐스트', '인스타', '페이스북', '블로그', 'TV', '유튜브', '뉴스페이퍼', '유튜브', '인스타', '인스타', '유튜브'],
+                  '가격' : [500, 200, 600, 300, 500, 400, 300, 300, 200, 500, 400, 800, 700, 200],
+                   '횟수' : [20, 5, 400, 120, 200, 350, 500, 200, 264, 200, 50, 24, 856, 325],
+                  '날짜' : [20220516, 20220514, 20220516, 20220318, 20220101, 20220302, 20220404, 20220516, 20220328, 20220205, 20210606, 20211231, 20220226, 20211111],
+                  '운영국' : ['py', 'sy','hh', 'dcd', 'dcd','cue','bon','py','cue','mmo','dun','vv','dcd','cue']})
+df
+
+
+# In[47]:
+
+
+# 데이터 프레임 열을 리스트로 추출하기
+df['이름'].to_list()
+
+
+# In[48]:
+
+
+name_val = df['이름'].drop_duplicates().values
+name_list = name_val.tolist()
+name_list
+
+
+# In[49]:
+
+
+# 누적 막대그래프 그리기
+df['가격총합'] = df.groupby(['이름'])['가격'].transform('sum')
+df['횟수총합'] = df.groupby(['이름'])['횟수'].transform('sum')
+
+
+# In[50]:
+
+
+df
+
+
+# In[51]:
+
+
+name_frame = df['이름']
+price_frame = df[['이름', '가격총합']].drop_duplicates()
+num_frame = df[['이름', '횟수총합']].drop_duplicates()
+
+graph_frame = pd.merge(name_frame, price_frame, on = '이름', how = 'outer')
+graph_frame = pd.merge(graph_frame, num_frame, on = '이름', how = 'left')
+
+
+# In[52]:
+
+
+graph_frame
+
+
+# In[59]:
+
+
+x = graph_frame['이름'].to_list()
+y1 = graph_frame['가격총합'].to_list()
+y2 = graph_frame['횟수총합'].to_list()
+
+plt.bar(range(len(x)), y1)
+plt.bar(range(len(x)), y2)
+
+plt.rc('font', family = 'Malgun Gothic')
+plt.title('각격과 횟수 누적')
+
+plt.legend(['가격총합', '횟수총합'])
+
+plt.
+plt.show()
+
+
+# In[ ]:
+
+
+
+
